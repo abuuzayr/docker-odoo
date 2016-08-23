@@ -73,7 +73,7 @@ RUN set -x; \
     echo 'Host git.groventure.com\n\tStrictHostKeyChecking no\n' >> /root/.ssh/config && \
     mkdir -p /opt && \
     git clone \
-        --branch 9.0 \
+        --branch upstream-ocb \
         --depth 3 \
         git@git.groventure.com:/gronex/odoo.git /opt/odoo && \
     ln -svf /opt/odoo/openerp-server /usr/bin/openerp-server && \
