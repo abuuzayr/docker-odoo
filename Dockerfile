@@ -70,7 +70,7 @@ COPY ./ci@groventure.com.sg.id_rsa /root/.ssh/id_rsa
 RUN set -x; \
     chmod 0700 /root/.ssh && \
     chmod 0600 /root/.ssh/id_rsa && \
-    echo -e 'Host git.groventure.com\n\tStrictHostKeyChecking no\n' >> /root/.ssh/config && \
+    echo 'Host git.groventure.com\n\tStrictHostKeyChecking no\n' >> /root/.ssh/config && \
     mkdir -p /opt && \
     git clone \
         --branch 9.0 \
