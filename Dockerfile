@@ -17,25 +17,27 @@ RUN set -x; \
 
 # Install dependencies
 RUN set -x; \
-        apt-get update && \
-        apt-get install -y --no-install-recommends \
-            # Required by pip install python-ldap
-            libldap-2.4-2 \
-            # Required by pip install psycopg2
-            libpq5 \
-            # Required by pip install python-ldap
-            libsasl2-2 \
-            # Required by pip install lxml
-            libxml2 \
-            # Required by pip install lxml
-            libxslt1.1 \
-            # Required by npm install -g less
-            nodejs \
-            postgresql-client \
-            python && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        # Required by pip install pillow
+        libjpeg62-turbo \
+        # Required by pip install python-ldap
+        libldap-2.4-2 \
+        # Required by pip install psycopg2
+        libpq5 \
+        # Required by pip install python-ldap
+        libsasl2-2 \
+        # Required by pip install lxml
+        libxml2 \
+        # Required by pip install lxml
+        libxslt1.1 \
         # Required by npm install -g less
-        update-alternatives --install \
-            /usr/bin/node node /usr/bin/nodejs 10
+        nodejs \
+        postgresql-client \
+        python && \
+    # Required by npm install -g less
+    update-alternatives --install \
+        /usr/bin/node node /usr/bin/nodejs 10
 
 # Install build dependencies
 RUN set -x; \
@@ -43,6 +45,8 @@ RUN set -x; \
     apt-get install -y --no-install-recommends \
         # Needed for git and python-pip for proper SSL verification of downloaded packages..
         ca-certificates \
+        # Required by pip install pillow
+        libjpeg62-turbo-dev \
         # Required by pip install python-ldap
         libldap2-dev \
         # Required by pip install psycopg2
@@ -87,16 +91,6 @@ RUN set -x; \
 
 # Install pip dependencies
 RUN pip install -r /opt/odoo/requirements.txt
-
-# Install Odoo
-#ENV ODOO_VERSION 9.0
-#ENV ODOO_RELEASE 20160301
-#RUN set -x; \
-#        curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}c.${ODOO_RELEASE}_all.deb \
-#        && dpkg --force-depends -i odoo.deb \
-#        && apt-get update \
-#        && apt-get -y install -f --no-install-recommends \
-#        && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy Odoo configuration file and entrypoint
 COPY ./openerp-server.conf /opt/odoo/
