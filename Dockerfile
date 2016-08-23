@@ -53,7 +53,9 @@ RUN set -x; \
         # Required by pip install wheels
         python-dev \
         python-pip \
-        python-setuptools && \
+        python-setuptools \
+        # Needed by git
+        openssh-client && \
     # Required by pip install wheels
     pip install --upgrade pip
 
