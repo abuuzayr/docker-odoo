@@ -61,13 +61,19 @@ RUN set -x; \
 RUN set -x; \
     npm install -g less
 
+# Copy private key.
+COPY ./ci@groventure.com.sg.id_rsa /root/.ssh/id_rsa
+
 # Get odoo sources
 RUN set -x; \
+    chmod 0700 /root/.ssh && \
+    chmod 0600 /root/.ssh/id_rsa && \
+    echo -e 'Host git.groventure.com\n\tStrictHostKeyChecking no\n' >> /root/.ssh/config && \
     mkdir -p /opt && \
     git clone \
         --branch 9.0 \
-        --depth 1 \
-        https://github.com/OCA/OCB.git /opt/odoo && \
+        --depth 3 \
+        git@git.groventure.com:/gronex/odoo.git /opt/odoo && \
     ln -svf /opt/odoo/openerp-server /usr/bin/openerp-server && \
     groupadd --gid 107 odoo && \
     useradd -d /var/lib/odoo --create-home --uid 104 --gid 107 --system odoo && \

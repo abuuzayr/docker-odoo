@@ -1,0 +1,14 @@
+image: docker:latest
+
+services:
+  - docker: dind
+
+before_script:
+  - docker info
+
+build:
+  stage: build
+  script:
+    #- 'docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.groventure.com'
+    - 'docker build -t docker.groventure.com/gronex/docker-odoo:ocb-9 .'
+    #- 'docker push docker.groventure.com/gronex/docker-odoo:ocb-9'
