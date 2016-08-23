@@ -9,6 +9,12 @@ RUN set -x; \
         curl && \
     curl -L https://deb.nodesource.com/setup_4.x | bash -
 
+# Create users/groups here so that uid/gid will not be taken by other processes
+# which are installed later.
+RUN set -x; \
+    groupadd --gid 107 odoo && \
+    useradd -d /var/lib/odoo --create-home --uid 104 --gid 107 --system odoo
+
 # Install dependencies
 RUN set -x; \
         apt-get update && \
@@ -77,8 +83,6 @@ RUN set -x; \
         --depth 3 \
         git@git.groventure.com:/gronex/odoo.git /opt/odoo && \
     ln -svf /opt/odoo/openerp-server /usr/bin/openerp-server && \
-    groupadd --gid 107 odoo && \
-    useradd -d /var/lib/odoo --create-home --uid 104 --gid 107 --system odoo && \
     rm -rf /opt/odoo/.git
 
 # Install pip dependencies
