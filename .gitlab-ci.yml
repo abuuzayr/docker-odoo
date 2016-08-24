@@ -12,17 +12,18 @@ variables:
   TEST_IMAGE: 'docker.groventure.com/gronex/odoo:$CI_BUILD_REF_NAME'
   RELEASE_IMAGE: 'docker.groventure.com/gronex/odoo:latest'
 
+before_script:
+  - 'docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN https://docker.groventure.com/v2/'
+
 build:
   stage: build
   script:
-    - 'docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.groventure.com'
     - 'docker build --pull -t $TEST_IMAGE .'
     - 'docker push $TEST_IMAGE'
 
 test_base:
   stage: test
   script:
-    - 'docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.groventure.com'
     - 'docker run -itd --name odoo-postgresql --env POSTGRES_USER=odoo --env POSTGRES_PASSWORD=odoo postgres:9.5'
     - 'docker pull $TEST_IMAGE'
     - 'docker run -it --rm --link odoo-postgresql:postgres -p 8069:8069 odoo-ocb  serve -- -d test_base --test-enable -i base --stop-after-init --log-level test --max-cron-threads 0'
@@ -30,7 +31,6 @@ test_base:
 release:
   stage: release
   script:
-    - 'docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.groventure.com'
     - 'docker pull $TEST_IMAGE'
     - 'docker tag $TEST_IMAGE $RELEASE_IMAGE'
     - 'docker push $RELEASE_IMAGE'
